@@ -3,18 +3,18 @@
 
 # Detect Debian users running the script with "sh" instead of bash
 if readlink /proc/$$/exe | grep -q "dash"; then
-	echo "This script needs to be run with bash, not sh"
+	echo "Этот скрипт должен использовать BASH"
 	exit
 fi
 
 if [[ "$EUID" -ne 0 ]]; then
-	echo "Sorry, you need to run this as root"
+	echo "Извините, но вы должны запустить скрипт от root"
 	exit
 fi
 
 if [[ ! -e /dev/net/tun ]]; then
-	echo "The TUN device is not available
-You need to enable TUN before running this script"
+	echo "TUN устройство не активно
+Вы должны включить TUN до запуска скрипта"
 	exit
 fi
 
@@ -27,7 +27,7 @@ elif [[ -e /etc/centos-release || -e /etc/redhat-release ]]; then
 	GROUPNAME=nobody
 	RCLOCAL='/etc/rc.d/rc.local'
 else
-	echo "Looks like you aren't running this installer on Debian, Ubuntu or CentOS"
+	echo "Этот скрипт корректно работает на Debian, Ubuntu or CentOS"
 	exit
 fi
 
