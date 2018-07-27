@@ -1,9 +1,5 @@
 #!/bin/bash
 #
-# https://github.com/Nyr/openvpn-install
-#
-# Copyright (c) 2013 Nyr. Released under the MIT License.
-
 
 # Detect Debian users running the script with "sh" instead of bash
 if readlink /proc/$$/exe | grep -q "dash"; then
@@ -168,10 +164,10 @@ if [[ -e /etc/openvpn/server.conf ]]; then
 	done
 else
 	clear
-	echo 'Welcome to this OpenVPN "road warrior" installer!'
+	echo 'Welcome to OpenVPN installer by Aleksandr!'
 	echo
 	# OpenVPN setup and first user creation
-	echo "I need to ask you a few questions before starting the setup."
+	echo "Мне необходимо задать несколько вопросов для установки"
 	echo "You can leave the default options and just press enter if you are ok with them."
 	echo
 	echo "First, provide the IPv4 address of the network interface you want OpenVPN"
