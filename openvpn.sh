@@ -167,11 +167,10 @@ else
 	echo 'Welcome to OpenVPN installer by Aleksandr!'
 	echo
 	# OpenVPN setup and first user creation
-	echo "Мне необходимо задать несколько вопросов для установки"
-	echo "You can leave the default options and just press enter if you are ok with them."
+	echo "Мне необходимо задать несколько вопросов для установки..."
+	echo "Вы можете забить на эти вопросы и нажимать тупо ENTER."
 	echo
-	echo "First, provide the IPv4 address of the network interface you want OpenVPN"
-	echo "listening to."
+	echo "Первый вопрос, Какой IPv4 адрес будет использоваться внутри сети сервер OpenVPN?"
 	# Autodetect IP address and pre-fill for the user
 	IP=$(ip addr | grep 'inet' | grep -v inet6 | grep -vE '127\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -1)
 	read -p "IP address: " -e -i $IP IP
@@ -252,8 +251,8 @@ ca ca.crt
 cert server.crt
 key server.key
 dh dh.pem
-auth SHA512
-tls-auth ta.key 0
+auth SHA1
+;tls-auth ta.key 0
 topology subnet
 server 10.8.0.0 255.255.255.0
 ifconfig-pool-persist ipp.txt" > /etc/openvpn/server.conf
@@ -379,7 +378,7 @@ nobind
 persist-key
 persist-tun
 remote-cert-tls server
-auth SHA512
+auth SHA1
 cipher AES-256-CBC
 comp-lzo
 setenv opt block-outside-dns
