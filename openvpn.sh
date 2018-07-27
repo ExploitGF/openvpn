@@ -52,26 +52,26 @@ if [[ -e /etc/openvpn/server.conf ]]; then
 	while :
 	do
 	clear
-		echo "Looks like OpenVPN is already installed."
+		echo "OpenVPN уже установлен."
 		echo
-		echo "What do you want to do?"
-		echo "   1) Add a new user"
-		echo "   2) Revoke an existing user"
-		echo "   3) Remove OpenVPN"
-		echo "   4) Exit"
-		read -p "Select an option [1-4]: " option
+		echo "Что мне сделать?"
+		echo "   1) Добавить нового пользователя"
+		echo "   2) Удалить существующего пользователя"
+		echo "   3) Удалить OpenVPN"
+		echo "   4) Выход"
+		read -p "Выбирите действие [1-4]: " option
 		case $option in
 			1) 
 			echo
-			echo "Tell me a name for the client certificate."
-			echo "Please, use one word only, no special characters."
-			read -p "Client name: " -e CLIENT
+			echo "Назовите имя клиента."
+	                echo "Пожалуйста, используйте только ОДНО слово без  спец. символов на английском."
+			read -p "Введите имя клиента: " -e CLIENT
 			cd /etc/openvpn/easy-rsa/
 			./easyrsa build-client-full $CLIENT nopass
 			# Generates the custom client.ovpn
 			newclient "$CLIENT"
 			echo
-			echo "Client $CLIENT added, configuration is available at:" ~/"$CLIENT.ovpn"
+			echo "Клиент $CLIENT добавлен, конфигурационный файл находится:" ~/"$CLIENT.ovpn"
 			exit
 			;;
 			2)
@@ -80,20 +80,20 @@ if [[ -e /etc/openvpn/server.conf ]]; then
 			NUMBEROFCLIENTS=$(tail -n +2 /etc/openvpn/easy-rsa/pki/index.txt | grep -c "^V")
 			if [[ "$NUMBEROFCLIENTS" = '0' ]]; then
 				echo
-				echo "You have no existing clients!"
+				echo "У вас нет существующих клиентов!"
 				exit
 			fi
 			echo
-			echo "Select the existing client certificate you want to revoke:"
+			echo "Выбирите клиента которого следует удалить:"
 			tail -n +2 /etc/openvpn/easy-rsa/pki/index.txt | grep "^V" | cut -d '=' -f 2 | nl -s ') '
 			if [[ "$NUMBEROFCLIENTS" = '1' ]]; then
-				read -p "Select one client [1]: " CLIENTNUMBER
+				read -p "Выбирите одного клиента [1]: " CLIENTNUMBER
 			else
-				read -p "Select one client [1-$NUMBEROFCLIENTS]: " CLIENTNUMBER
+				read -p "Выбирите одного клиента[1-$NUMBEROFCLIENTS]: " CLIENTNUMBER
 			fi
 			CLIENT=$(tail -n +2 /etc/openvpn/easy-rsa/pki/index.txt | grep "^V" | cut -d '=' -f 2 | sed -n "$CLIENTNUMBER"p)
 			echo
-			read -p "Do you really want to revoke access for client $CLIENT? [y/N]: " -e REVOKE
+			read -p "ВЫ точно хотите удалить существующего клиента $CLIENT? [y/N]: " -e REVOKE
 			if [[ "$REVOKE" = 'y' || "$REVOKE" = 'Y' ]]; then
 				cd /etc/openvpn/easy-rsa/
 				./easyrsa --batch revoke $CLIENT
@@ -106,16 +106,16 @@ if [[ -e /etc/openvpn/server.conf ]]; then
 				# CRL is read with each client connection, when OpenVPN is dropped to nobody
 				chown nobody:$GROUPNAME /etc/openvpn/crl.pem
 				echo
-				echo "Certificate for client $CLIENT revoked!"
+				echo "Сертификат клиента $CLIENT удалён!"
 			else
 				echo
-				echo "Certificate revocation for client $CLIENT aborted!"
+				echo "Удаление сертификата клиента $CLIENT отменена!"
 			fi
 			exit
 			;;
 			3) 
 			echo
-			read -p "Do you really want to remove OpenVPN? [y/N]: " -e REMOVE
+			read -p "Вы точно хотите удалить OpenVPN из системы? [y/N]: " -e REMOVE
 			if [[ "$REMOVE" = 'y' || "$REMOVE" = 'Y' ]]; then
 				PORT=$(grep '^port ' /etc/openvpn/server.conf | cut -d " " -f 2)
 				PROTOCOL=$(grep '^proto ' /etc/openvpn/server.conf | cut -d " " -f 2)
@@ -152,10 +152,10 @@ if [[ -e /etc/openvpn/server.conf ]]; then
 				rm -rf /etc/openvpn
 				rm -f /etc/sysctl.d/30-openvpn-forward.conf
 				echo
-				echo "OpenVPN removed!"
+				echo "Удаление OpenVPN выполнено!"
 			else
 				echo
-				echo "Removal aborted!"
+				echo "Удаление отменено"
 			fi
 			exit
 			;;
@@ -164,9 +164,8 @@ if [[ -e /etc/openvpn/server.conf ]]; then
 	done
 else
 	clear
-	echo 'Welcome to OpenVPN installer by Aleksandr!'
+	echo 'Добро пожаловать в установку OpenVPN от Семёнова Александра!'
 	echo
-	# OpenVPN setup and first user creation
 	echo "Мне необходимо задать несколько вопросов для установки..."
 	echo "Вы можете забить на эти вопросы и нажимать тупо ENTER."
 	echo
@@ -177,14 +176,13 @@ else
 	# If $IP is a private IP address, the server must be behind NAT
 	if echo "$IP" | grep -qE '^(10\.|172\.1[6789]\.|172\.2[0-9]\.|172\.3[01]\.|192\.168)'; then
 		echo
-		echo "This server is behind NAT. What is the public IPv4 address or hostname?"
-		read -p "Public IP address / hostname: " -e PUBLICIP
+		read -p "Внешний IP адрес: " -e PUBLICIP
 	fi
 	echo
-	echo "Which protocol do you want for OpenVPN connections?"
-	echo "   1) UDP (recommended)"
-	echo "   2) TCP"
-	read -p "Protocol [1-2]: " -e -i 1 PROTOCOL
+	echo "Какой протокол использовать для подключения OpenVPN?"
+	echo "   1) UDP (рекомендуется)"
+	echo "   2) TCP (mikrotik)"
+	read -p "Протокол [1-2]: " -e -i 1 PROTOCOL
 	case $PROTOCOL in
 		1) 
 		PROTOCOL=udp
@@ -194,23 +192,23 @@ else
 		;;
 	esac
 	echo
-	echo "What port do you want OpenVPN listening to?"
-	read -p "Port: " -e -i 1194 PORT
+	echo "Какой порт будет использовать OpenVPN?"
+	read -p "Порт: " -e -i 1194 PORT
 	echo
-	echo "Which DNS do you want to use with the VPN?"
-	echo "   1) Current system resolvers"
+	echo "Какой DNS использовать OpenVPN?"
+	echo "   1) Текущие настройки системы"
 	echo "   2) 1.1.1.1"
 	echo "   3) Google"
 	echo "   4) OpenDNS"
 	echo "   5) Verisign"
 	read -p "DNS [1-5]: " -e -i 1 DNS
 	echo
-	echo "Finally, tell me your name for the client certificate."
-	echo "Please, use one word only, no special characters."
-	read -p "Client name: " -e -i client CLIENT
+	echo "Последний вопрос, назовите имя клиента."
+	echo "Пожалуйста, используйте только ОДНО слово без  спец. символов на английском."
+	read -p "Введите имя клиента: " -e -i client CLIENT
 	echo
-	echo "Okay, that was all I needed. We are ready to set up your OpenVPN server now."
-	read -n1 -r -p "Press any key to continue..."
+	echo "Хорошо, всё что нужно я узнал... Сейчас я готов настроить вам ваш OpenVPN сервер."
+	read -n1 -r -p "Нажмите любую клавишу..."
 	if [[ "$OS" = 'debian' ]]; then
 		apt-get update
 		apt-get install openvpn iptables openssl ca-certificates -y
