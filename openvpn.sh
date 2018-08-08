@@ -239,6 +239,7 @@ else
 	chown nobody:$GROUPNAME /etc/openvpn/crl.pem
 	# Generate key for tls-auth
 	openvpn --genkey --secret /etc/openvpn/ta.key
+	mkdir -p /etc/openvpn/.ccd
 	# Generate server.conf
 	echo "port $PORT
 proto $PROTOCOL
