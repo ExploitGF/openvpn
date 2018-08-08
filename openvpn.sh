@@ -379,7 +379,7 @@ remote-cert-tls server
 auth SHA1
 cipher AES-256-CBC
 comp-lzo
-setenv opt block-outside-dns
+;setenv opt block-outside-dns
 key-direction 1
 verb 3" > /etc/openvpn/client-common.txt
 	# Generates the custom client.ovpn
