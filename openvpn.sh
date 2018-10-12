@@ -248,6 +248,7 @@ cert server.crt
 key server.key
 dh dh.pem
 auth SHA1
+client-to-client
 client-config-dir /etc/openvpn/.ccd
 ;tls-auth ta.key 0
 topology subnet
