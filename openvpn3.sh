@@ -763,16 +763,6 @@ push "redirect-gateway ipv6"' >> /etc/openvpn/server.conf
 	elif [[ $DH_TYPE == "2" ]]; then
 		echo "dh dh.pem" >> /etc/openvpn/server.conf
 	fi
-
-	case $TLS_SIG in
-		1)
-			echo "tls-crypt tls-crypt.key 0" >> /etc/openvpn/server.conf
-		;;
-		2)
-			echo "tls-auth tls-auth.key 0" >> /etc/openvpn/server.conf
-		;;
-	esac
-
 	echo "crl-verify crl.pem
 ca ca.crt
 cert $SERVER_NAME.crt
