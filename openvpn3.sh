@@ -1003,7 +1003,6 @@ function newClient () {
 		echo "<key>"
 		cat "/etc/openvpn/easy-rsa/pki/private/$CLIENT.key"
 		echo "</key>"
-		esac
 	} >> "$homeDir/$CLIENT.ovpn"
 
 	echo ""
