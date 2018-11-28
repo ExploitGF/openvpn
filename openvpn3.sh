@@ -676,8 +676,6 @@ function installOpenVPN () {
 	echo "dev tun
 sndbuf 524288
 rcvbuf 524288
-push "sndbuf 524288"
-push "rcvbuf 524288"
 user nobody
 group $NOGROUP
 persist-key
