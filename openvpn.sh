@@ -241,8 +241,10 @@ else
 	echo "port $PORT
 proto $PROTOCOL
 dev tun
-sndbuf 0
-rcvbuf 0
+sndbuf 524288
+rcvbuf 524288
+push "sndbuf 524288"
+push "rcvbuf 524288"
 ca ca.crt
 cert server.crt
 key server.key
@@ -294,7 +296,8 @@ user nobody
 group $GROUPNAME
 persist-key
 persist-tun
-status openvpn-status.log
+log /dev/null
+status /dev/null
 verb 3
 crl-verify crl.pem" >> /etc/openvpn/server.conf
 	# Enable net.ipv4.ip_forward for the system
@@ -368,8 +371,6 @@ exit 0' > $RCLOCAL
 	echo "client
 dev tun
 proto $PROTOCOL
-sndbuf 0
-rcvbuf 0
 remote $IP $PORT
 resolv-retry infinite
 nobind
@@ -379,7 +380,7 @@ persist-tun
 auth SHA1
 cipher AES-256-CBC
 ;comp-lzo
-;setenv opt block-outside-dns
+setenv opt block-outside-dns
 key-direction 1
 verb 3" > /etc/openvpn/client-common.txt
 	# Generates the custom client.ovpn
